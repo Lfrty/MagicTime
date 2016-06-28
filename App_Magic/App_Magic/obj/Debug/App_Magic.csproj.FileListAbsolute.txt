@@ -1,0 +1,17 @@
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\bin\Debug\App_Magic.exe.config
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\bin\Debug\App_Magic.exe
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\bin\Debug\App_Magic.pdb
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\obj\Debug\App_Magic.csprojResolveAssemblyReference.cache
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\obj\Debug\App_Magic.Properties.Resources.resources
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\obj\Debug\App_Magic.csproj.GenerateResource.Cache
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\obj\Debug\App_Magic.exe
+C:\Users\Lfrty\Desktop\C#\App_Magic\App_Magic\obj\Debug\App_Magic.pdb
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\bin\Debug\App_Magic.exe.config
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.exe
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.pdb
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.csprojResolveAssemblyReference.cache
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.Properties.Resources.resources
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.csproj.GenerateResource.Cache
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\obj\Debug\App_Magic.form_Principal.resources
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\bin\Debug\App_Magic.exe
+C:\Users\Lfrty\Desktop\Tareas y proyectos\Magic\App_Magic\App_Magic\bin\Debug\App_Magic.pdb
