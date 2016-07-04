@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,17 +14,20 @@ namespace App_Magic
 {
     public partial class form_Principal : Form
     {
-        string[] nombres = { "Avacyn_Restored" };
+        string[] nombres = { "Avacyn_Restored", "Return_to_Ravnica"};
         static ListaCartas c;
         static List<Carta> lista;
-        PictureBox imgCosteColor = new PictureBox();
-        PictureBox imgCoste = new PictureBox();
         string[] costesIncoloros = { "{0}", "{1}", "{2}", "{3}", "{4}", "{5}", "{6}", "{7}", "{8}", "{9}" };
         string[] colores = { "{B}", "{U}", "{W}", "{G}", "{R}" };
         string[] nombreImg = { "negro", "azul", "blanco", "verde", "rojo" };
         string[] nombreImgIncoloros = { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
         daoMagic d = new daoMagic();
+        List<PictureBox> listaImagenesMana = new List<PictureBox>();
+        string cartaSeleccionada = "";
         string edicionSeleccionada = "";
+        bool conectado = false;
+        int numBorrar = 0;
+
         public form_Principal()
         {
             InitializeComponent();
@@ -35,16 +39,34 @@ namespace App_Magic
             try
             {
                 c = new ListaCartas();
-                AnyadeColeccionesLista();
+                PintaColeccionesLista();
+                conectado=d.Conectar();
+                ActualizaInfoConexion();
+                
+                
             }
             catch (Exception)
             {
-                
+                MessageBox.Show("ERROR DE CARGA");
                 throw;
             }
         }
 
-        private void AnyadeColeccionesLista()
+        private void ActualizaInfoConexion()
+        {
+            if (conectado)
+            {
+                lbl_InfoConectado.Text = "CONECTADO";
+                lbl_InfoConectado.BackColor = Color.Green;
+            }
+            else
+            {
+                lbl_InfoConectado.Text = "DESCONECTADO";
+                lbl_InfoConectado.BackColor = Color.Red;
+            }
+        }
+
+        private void PintaColeccionesLista()
         {
             for (int i = 0; i < nombres.Length; i++)
             {
@@ -52,59 +74,57 @@ namespace App_Magic
             }
         }
 
-        private void btn_Mostrar_Click(object sender, EventArgs e)
+        private void PintaListaInfoCartas()
         {
-            CargarLista();
-        }
-
-        private void CargarLista()
-        {
-            lBox_Lista.Items.Clear();
+            lBox_ListaCartasDesdeBD.Items.Clear();
             foreach (Carta item in lista)
             {
-                lBox_Lista.Items.Add(item.Nombre);
+                lBox_ListaCartasDesdeBD.Items.Add(item.Nombre);
             }
         }
 
-        private void lBox_Lista_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void MuestraDatosCarta(string carta)
         {
-            string coste = "";
+                string coste = "";
 
-            foreach (Carta item in lista)
-            {
-                if (((ListBox)sender).Text == item.Nombre)
+                foreach (Carta item in lista)
                 {
-                    tBox_Nombre.Text = item.Nombre;
-                    coste = item.Coste;
-                    tBox_Texto.Text = item.Texto;
-                    tBox_tipo.Text = item.Tipo;
+                    if (carta == item.Nombre)
+                    {
+                        tBox_Nombre.Text = item.Nombre;
+                        coste = item.Coste;
+                        tBox_Texto.Text = item.Texto;
+                        tBox_tipo.Text = item.Tipo;
 
-                    if (coste.Contains("{R}"))
-                    {
-                        this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/montanya.jpg");
-                    }
+                        if (coste.Contains("{R}"))
+                        {
+                            this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/montanya.jpg");
+                        }
 
-                    else if (coste.Contains("{G}"))
-                    {
-                        this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/bosque.jpg");
+                        else if (coste.Contains("{G}"))
+                        {
+                            this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/bosque.jpg");
+                        }
+                        else if (coste.Contains("{U}"))
+                        {
+                            this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/isla.jpg");
+                        }
+                        else if (coste.Contains("{B}"))
+                        {
+                            this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/pantano.jpg");
+                        }
+                        else
+                        {
+                            this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/llanura.jpg");
+                        }
+                        PintaCoste(coste);
+                        label5.Text = coste;
+                        break;
                     }
-                    else if (coste.Contains("{U}"))
-                    {
-                        this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/isla.jpg");
-                    }
-                    else if (coste.Contains("{B}"))
-                    {
-                        this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/pantano.jpg");
-                    }
-                    else
-                    {
-                        this.BackgroundImage = Image.FromFile(@"Imagenes/FondosTexto/llanura.jpg");
-                    }
-                    PintaCoste(coste);
-                    label5.Text = coste;
                 }
             }
-        }
+        
 
         private void PintaCoste(string coste)
         {
@@ -114,8 +134,12 @@ namespace App_Magic
             int x = 20;
             int y = 100;
             int aux = 3;
-            bool color = false;
-            bool incoloro = false;
+
+            foreach (PictureBox item in listaImagenesMana)
+            {
+                item.Dispose();   
+            }
+            
             for (int i = 0; i < coste.Length; i++)
             {
                 costeActual = coste.Substring(i, 3);
@@ -125,19 +149,18 @@ namespace App_Magic
                 {
                     pos = Array.IndexOf(costesIncoloros, costeActual);
                     nombreImagenActual = @Directory.GetCurrentDirectory() + @"/Imagenes/Iconos/IconosMana/CosteIncoloro/" + nombreImgIncoloros[pos] + ".png";
-                    incoloro = true;
+                    
                 }
                 else if (colores.Contains(costeActual))
                 {
                     pos = Array.IndexOf(colores, costeActual);
                     nombreImagenActual = @Directory.GetCurrentDirectory() + @"/Imagenes/Iconos/IconosMana/Colores/" + nombreImg[pos] +".png";
-                    color = true;
+                   
                 }                
 
-                if (pos!=0)
+                if (pos!=-1)
                 {
-                    if (color)
-                    {
+                        PictureBox imgCosteColor = new PictureBox();
                         imgCosteColor.Width = 30;
                         imgCosteColor.Height = 50;
                         imgCosteColor.Top = 55;
@@ -146,74 +169,33 @@ namespace App_Magic
                         imgCosteColor.Size = new System.Drawing.Size(40, 40);
                         imgCosteColor.SizeMode = PictureBoxSizeMode.StretchImage;
                         Controls.Add(imgCosteColor);
-                        imgCosteColor.Load(nombreImagenActual);
                         imgCosteColor.Refresh();
-                        color = false;
-                    }
-                    else
-                    {
-                        imgCoste.Width = 30;
-                        imgCoste.Height = 50;
-                        imgCoste.Top = 55;
-                        imgCoste.Left = y + 55;
-                        imgCoste.ImageLocation = nombreImagenActual;
-                        imgCoste.Size = new System.Drawing.Size(40, 40);
-                        imgCoste.SizeMode = PictureBoxSizeMode.StretchImage;
-                        Controls.Add(imgCoste);
-                        imgCoste.Load(nombreImagenActual);
-                        imgCoste.Refresh();
-                        incoloro = false;
-                    }
-                    y += 55;
-                }               
+                        Thread.Sleep(100);
+                        listaImagenesMana.Add(imgCosteColor);       
+                        y += 55;
+                }
+                
             }
+            /*
+            foreach (PictureBox item in listaImagenesMana)
+            {
+                item.LoadAsync();
+            }
+             */
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            lBox_Ediciones.Left += 10;
-        }
-
+        #region MANEJADORES DE EVENTO
         private void btn_conectar_Click(object sender, EventArgs e)
         {
-            if (!d.Conectar())
+            if (conectado)
             {
-                MessageBox.Show("NO CONECTASTE MEN", "NO CONECTADO");
+                conectado=d.Desconectar();
             }
             else
             {
-                MessageBox.Show("CONECTADO", "BIEN BIEN");                
+                conectado = d.Conectar();
             }
-        }
-
-        private void btn_anyadeColeccion_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                foreach (string item in nombres)
-                {
-                    d.CreaTabla(item);
-                    lista = c.LeerXML(@"/MagicXml/" + item+ ".xml");
-                    for (int i = 0; i < lista.Count; i++)
-                    {
-                        if (!d.DameCartas(i, lista[i], item))
-                        {
-                            MessageBox.Show("ERROR al insertar");
-                        }
-                        
-                    }
-                }
-                MessageBox.Show("COMPLETADO");
-
-                
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-           
-            MessageBox.Show("HECHO");
+            ActualizaInfoConexion();
         }
 
         private void btn_CargaEdicion_Click(object sender, EventArgs e)
@@ -221,9 +203,87 @@ namespace App_Magic
             lista = d.Seleccionar(edicionSeleccionada);
         }
 
+        /// <summary>
+        /// Cambia el valor del campo edicion Seleccionada para uso en métodos
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lBox_Ediciones_SelectedIndexChanged(object sender, EventArgs e)
         {
             edicionSeleccionada = ((ListBox)sender).Text;
         }
+
+        private void btn_Mostrar_Click(object sender, EventArgs e)
+        {
+            PintaListaInfoCartas();
+        }
+
+        private void form_Principal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            d.Desconectar();
+        }
+
+        private void lBox_Lista_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cartaSeleccionada = ((ListBox)sender).Text;
+            MuestraDatosCarta(cartaSeleccionada);
+        }
+
+        /// <summary>
+        /// Inserta en TextBox la edicion seleccionada en lista
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lBox_Ediciones_DoubleClick(object sender, EventArgs e)
+        {
+            tBox_InsertarEdicion.Text = ((ListBox)sender).Text;
+        }
+
+        private void btn_XmlBaseDeDatos_Click(object sender, EventArgs e)
+        {
+            string nombreEdcion = tBox_InsertarEdicion.Text;
+            int i = 0;
+            try
+            {
+                d.CreaTabla(nombreEdcion);
+                lista = c.LeerXML(@"/MagicXml/" + nombreEdcion + ".xml");
+                progBar_CargarABD.Maximum = lista.Count;
+                foreach (Carta item in lista)
+                {
+                    d.DameCartas(i, item, nombreEdcion);
+                    i++;
+                    progBar_CargarABD.Value = i;
+                }
+                i = 0;
+                MessageBox.Show("SIN ERRORES APARENTES");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("ERROR INtRODUCIENDO");
+                throw;
+            }
+        }
+
+        private void btn_Borrar_Click(object sender, EventArgs e)
+        {
+            numBorrar = int.Parse(tBox_Borrar.Text);
+            edicionSeleccionada = tBox_InsertarEdicion.Text;
+            if (d.Borrar(numBorrar, edicionSeleccionada))
+            {
+                MessageBox.Show("BORRADO TODO DE " + edicionSeleccionada);
+            }
+            else
+            {
+                MessageBox.Show("ERROR");
+            }
+        }
+
+        private void tBox_InsertarEdicion_TextChanged(object sender, EventArgs e)
+        {
+            edicionSeleccionada = tBox_InsertarEdicion.Text;
+        } 
+        #endregion
+
+
     }
 }

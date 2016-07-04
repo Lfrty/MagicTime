@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(form_Principal));
-            this.btn_anyadeColeccion = new System.Windows.Forms.Button();
             this.btn_Mostrar = new System.Windows.Forms.Button();
             this.oFile_Coleccion = new System.Windows.Forms.OpenFileDialog();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,23 +38,19 @@
             this.tBox_Nombre = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.lBox_Lista = new System.Windows.Forms.ListBox();
+            this.lBox_ListaCartasDesdeBD = new System.Windows.Forms.ListBox();
             this.lBox_Ediciones = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.btn_conectar = new System.Windows.Forms.Button();
             this.btn_CargaEdicion = new System.Windows.Forms.Button();
+            this.tBox_InsertarEdicion = new System.Windows.Forms.TextBox();
+            this.btn_XmlBaseDeDatos = new System.Windows.Forms.Button();
+            this.progBar_CargarABD = new System.Windows.Forms.ProgressBar();
+            this.tBox_Borrar = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btn_Borrar = new System.Windows.Forms.Button();
+            this.lbl_InfoConectado = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // btn_anyadeColeccion
-            // 
-            this.btn_anyadeColeccion.Font = new System.Drawing.Font("Constantia", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_anyadeColeccion.Location = new System.Drawing.Point(746, 26);
-            this.btn_anyadeColeccion.Name = "btn_anyadeColeccion";
-            this.btn_anyadeColeccion.Size = new System.Drawing.Size(119, 51);
-            this.btn_anyadeColeccion.TabIndex = 1;
-            this.btn_anyadeColeccion.Text = "Añadir Colección";
-            this.btn_anyadeColeccion.UseVisualStyleBackColor = true;
-            this.btn_anyadeColeccion.Click += new System.EventHandler(this.btn_anyadeColeccion_Click);
             // 
             // btn_Mostrar
             // 
@@ -64,7 +59,7 @@
             this.btn_Mostrar.Name = "btn_Mostrar";
             this.btn_Mostrar.Size = new System.Drawing.Size(119, 36);
             this.btn_Mostrar.TabIndex = 2;
-            this.btn_Mostrar.Text = "Mostrar";
+            this.btn_Mostrar.Text = "<-- Mostrar";
             this.btn_Mostrar.UseVisualStyleBackColor = true;
             this.btn_Mostrar.Click += new System.EventHandler(this.btn_Mostrar_Click);
             // 
@@ -141,14 +136,14 @@
             this.label2.TabIndex = 10;
             this.label2.Text = "Coste:";
             // 
-            // lBox_Lista
+            // lBox_ListaCartasDesdeBD
             // 
-            this.lBox_Lista.FormattingEnabled = true;
-            this.lBox_Lista.Location = new System.Drawing.Point(446, 12);
-            this.lBox_Lista.Name = "lBox_Lista";
-            this.lBox_Lista.Size = new System.Drawing.Size(228, 251);
-            this.lBox_Lista.TabIndex = 9;
-            this.lBox_Lista.SelectedIndexChanged += new System.EventHandler(this.lBox_Lista_SelectedIndexChanged);
+            this.lBox_ListaCartasDesdeBD.FormattingEnabled = true;
+            this.lBox_ListaCartasDesdeBD.Location = new System.Drawing.Point(446, 12);
+            this.lBox_ListaCartasDesdeBD.Name = "lBox_ListaCartasDesdeBD";
+            this.lBox_ListaCartasDesdeBD.Size = new System.Drawing.Size(228, 251);
+            this.lBox_ListaCartasDesdeBD.TabIndex = 9;
+            this.lBox_ListaCartasDesdeBD.SelectedIndexChanged += new System.EventHandler(this.lBox_Lista_SelectedIndexChanged);
             // 
             // lBox_Ediciones
             // 
@@ -158,6 +153,7 @@
             this.lBox_Ediciones.Size = new System.Drawing.Size(126, 147);
             this.lBox_Ediciones.TabIndex = 10;
             this.lBox_Ediciones.SelectedIndexChanged += new System.EventHandler(this.lBox_Ediciones_SelectedIndexChanged);
+            this.lBox_Ediciones.DoubleClick += new System.EventHandler(this.lBox_Ediciones_DoubleClick);
             // 
             // label5
             // 
@@ -180,13 +176,72 @@
             // 
             // btn_CargaEdicion
             // 
-            this.btn_CargaEdicion.Location = new System.Drawing.Point(635, 296);
+            this.btn_CargaEdicion.Location = new System.Drawing.Point(612, 286);
             this.btn_CargaEdicion.Name = "btn_CargaEdicion";
-            this.btn_CargaEdicion.Size = new System.Drawing.Size(86, 34);
+            this.btn_CargaEdicion.Size = new System.Drawing.Size(102, 53);
             this.btn_CargaEdicion.TabIndex = 19;
-            this.btn_CargaEdicion.Text = "Cargar Edicion";
+            this.btn_CargaEdicion.Text = "Cargar Edicion desde BD";
             this.btn_CargaEdicion.UseVisualStyleBackColor = true;
             this.btn_CargaEdicion.Click += new System.EventHandler(this.btn_CargaEdicion_Click);
+            // 
+            // tBox_InsertarEdicion
+            // 
+            this.tBox_InsertarEdicion.Location = new System.Drawing.Point(468, 331);
+            this.tBox_InsertarEdicion.Name = "tBox_InsertarEdicion";
+            this.tBox_InsertarEdicion.Size = new System.Drawing.Size(120, 20);
+            this.tBox_InsertarEdicion.TabIndex = 20;
+            this.tBox_InsertarEdicion.TextChanged += new System.EventHandler(this.tBox_InsertarEdicion_TextChanged);
+            // 
+            // btn_XmlBaseDeDatos
+            // 
+            this.btn_XmlBaseDeDatos.Location = new System.Drawing.Point(646, 345);
+            this.btn_XmlBaseDeDatos.Name = "btn_XmlBaseDeDatos";
+            this.btn_XmlBaseDeDatos.Size = new System.Drawing.Size(94, 46);
+            this.btn_XmlBaseDeDatos.TabIndex = 21;
+            this.btn_XmlBaseDeDatos.Text = "XML A BD";
+            this.btn_XmlBaseDeDatos.UseVisualStyleBackColor = true;
+            this.btn_XmlBaseDeDatos.Click += new System.EventHandler(this.btn_XmlBaseDeDatos_Click);
+            // 
+            // progBar_CargarABD
+            // 
+            this.progBar_CargarABD.Location = new System.Drawing.Point(468, 398);
+            this.progBar_CargarABD.Name = "progBar_CargarABD";
+            this.progBar_CargarABD.Size = new System.Drawing.Size(120, 23);
+            this.progBar_CargarABD.TabIndex = 22;
+            // 
+            // tBox_Borrar
+            // 
+            this.tBox_Borrar.Location = new System.Drawing.Point(99, 514);
+            this.tBox_Borrar.Name = "tBox_Borrar";
+            this.tBox_Borrar.Size = new System.Drawing.Size(100, 20);
+            this.tBox_Borrar.TabIndex = 25;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(222, 514);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(50, 13);
+            this.label6.TabIndex = 26;
+            this.label6.Text = "<-- Borrar";
+            // 
+            // btn_Borrar
+            // 
+            this.btn_Borrar.Location = new System.Drawing.Point(319, 503);
+            this.btn_Borrar.Name = "btn_Borrar";
+            this.btn_Borrar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Borrar.TabIndex = 27;
+            this.btn_Borrar.Text = "Borrar";
+            this.btn_Borrar.UseVisualStyleBackColor = true;
+            this.btn_Borrar.Click += new System.EventHandler(this.btn_Borrar_Click);
+            // 
+            // lbl_InfoConectado
+            // 
+            this.lbl_InfoConectado.Location = new System.Drawing.Point(705, 36);
+            this.lbl_InfoConectado.Name = "lbl_InfoConectado";
+            this.lbl_InfoConectado.Size = new System.Drawing.Size(100, 23);
+            this.lbl_InfoConectado.TabIndex = 28;
+            this.lbl_InfoConectado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // form_Principal
             // 
@@ -194,6 +249,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::App_Magic.Properties.Resources.AltarSinDios;
             this.ClientSize = new System.Drawing.Size(912, 609);
+            this.Controls.Add(this.lbl_InfoConectado);
+            this.Controls.Add(this.btn_Borrar);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.tBox_Borrar);
+            this.Controls.Add(this.progBar_CargarABD);
+            this.Controls.Add(this.btn_XmlBaseDeDatos);
+            this.Controls.Add(this.tBox_InsertarEdicion);
             this.Controls.Add(this.btn_CargaEdicion);
             this.Controls.Add(this.btn_conectar);
             this.Controls.Add(this.label5);
@@ -202,15 +264,15 @@
             this.Controls.Add(this.lBox_Ediciones);
             this.Controls.Add(this.btn_Mostrar);
             this.Controls.Add(this.tBox_Texto);
-            this.Controls.Add(this.btn_anyadeColeccion);
             this.Controls.Add(this.tBox_Nombre);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.lBox_Lista);
+            this.Controls.Add(this.lBox_ListaCartasDesdeBD);
             this.Controls.Add(this.label2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "form_Principal";
             this.Text = "MagicMatt";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.form_Principal_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -218,7 +280,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_anyadeColeccion;
         private System.Windows.Forms.Button btn_Mostrar;
         private System.Windows.Forms.OpenFileDialog oFile_Coleccion;
         private System.Windows.Forms.Label label1;
@@ -226,13 +287,20 @@
         private System.Windows.Forms.TextBox tBox_Nombre;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListBox lBox_Lista;
+        private System.Windows.Forms.ListBox lBox_ListaCartasDesdeBD;
         private System.Windows.Forms.TextBox tBox_tipo;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox lBox_Ediciones;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btn_conectar;
         private System.Windows.Forms.Button btn_CargaEdicion;
+        private System.Windows.Forms.TextBox tBox_InsertarEdicion;
+        private System.Windows.Forms.Button btn_XmlBaseDeDatos;
+        private System.Windows.Forms.ProgressBar progBar_CargarABD;
+        private System.Windows.Forms.TextBox tBox_Borrar;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btn_Borrar;
+        private System.Windows.Forms.Label lbl_InfoConectado;
     }
 }
 

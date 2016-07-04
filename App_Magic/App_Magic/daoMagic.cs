@@ -58,7 +58,7 @@ namespace App_Magic
             return true;
         }
 
-        public void Desconectar()
+        public bool Desconectar()
         {
             try
             {
@@ -66,8 +66,10 @@ namespace App_Magic
             }
             catch (SQLiteException)
             {
+                return true;
                 throw;
             }
+            return false;
         }
 
         /// <summary>
@@ -104,6 +106,29 @@ namespace App_Magic
             lector.Close();
             return resultado;
         }
-        
+
+
+        internal bool Borrar(int numBorrar, string edicion)
+        {
+            string sql = "";
+            if (numBorrar==0)
+            {
+                sql = " delete from " + edicion;
+            }
+            else
+            {
+                sql = " delete from " + edicion + " where id = " + numBorrar;
+            }
+            SQLiteCommand cmd = new SQLiteCommand(sql, conexion);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
